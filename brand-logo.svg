@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 236" role="img" aria-labelledby="title desc">
+  <title id="title">Supertech Steel Fabrication</title>
+  <desc id="desc">Two welders spark as they work beside the red initials S.S.F. Supertech Steel Fabrication. Fueling industries with strength, spark, and steel, built to last, welded to win.</desc>
+  <defs><linearGradient id="red" x2="0" y2="1"><stop stop-color="#ff4944"/><stop offset="1" stop-color="#c91720"/></linearGradient></defs>
+  <g stroke="#d6d8dc" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+    <g transform="translate(24 4)">
+      <path fill="#25282c" d="M32 68 42 28 75 9l32 13 10 38-13 21H47z"/><path fill="#aeb4bc" d="m43 34 30-15 26 11-3 31-26 17-28-12z"/><path fill="#26292e" d="m51 37 20-9 20 8-3 18-19 12-18-10z"/><path fill="#4b1115" d="m35 75 32 15 3 34-27 31-31-9-10-36z"/><path fill="url(#red)" d="m6 109 18-21 31 9 17 30-12 28-32 11-20-25z"/><path fill="#17191c" d="m66 93 22-9 17 12 17 34-14 9-24-26-17 22-15-9z"/><path fill="#bbbfc5" d="m15 144 13-9 18 10-9 9-20 1z"/><path fill="#25282c" d="m21 152 31-9 9 10-29 18-17-5z"/><path fill="#ddd" d="m75 129 28-11 8 9-25 15-20 3z"/><path fill="#25282c" d="m68 145 34-20 10 7-28 24-18 3z"/>
+      <path fill="#eee" stroke="none" d="m71 148 5-15 5 15 15 5-15 5-5 15-5-15-15-5z"/><path fill="#ff6b34" stroke="none" d="m105 153 3-8 3 8 8 3-8 3-3 8-3-8-8-3zm-53 7 2-6 3 6 6 2-6 3-3 6-2-6-6-3z"/>
+    </g>
+    <g transform="translate(736 4) scale(-1 1)">
+      <path fill="#25282c" d="M32 68 42 28 75 9l32 13 10 38-13 21H47z"/><path fill="#aeb4bc" d="m43 34 30-15 26 11-3 31-26 17-28-12z"/><path fill="#26292e" d="m51 37 20-9 20 8-3 18-19 12-18-10z"/><path fill="#4b1115" d="m35 75 32 15 3 34-27 31-31-9-10-36z"/><path fill="url(#red)" d="m6 109 18-21 31 9 17 30-12 28-32 11-20-25z"/><path fill="#17191c" d="m66 93 22-9 17 12 17 34-14 9-24-26-17 22-15-9z"/><path fill="#bbbfc5" d="m15 144 13-9 18 10-9 9-20 1z"/><path fill="#25282c" d="m21 152 31-9 9 10-29 18-17-5z"/><path fill="#ddd" d="m75 129 28-11 8 9-25 15-20 3z"/><path fill="#25282c" d="m68 145 34-20 10 7-28 24-18 3z"/>
+      <path fill="#eee" stroke="none" d="m71 148 5-15 5 15 15 5-15 5-5 15-5-15-15-5z"/><path fill="#ff6b34" stroke="none" d="m105 153 3-8 3 8 8 3-8 3-3 8-3-8-8-3zm-53 7 2-6 3 6 6 2-6 3-3 6-2-6-6-3z"/>
+    </g>
+  </g>
+  <text x="380" y="153" text-anchor="middle" font-family="Georgia,serif" font-size="112" font-weight="900" letter-spacing="4" fill="url(#red)">S.S.F</text>
+  <text x="380" y="195" text-anchor="middle" font-family="'Brush Script MT','Segoe Script',cursive" font-size="36" font-style="italic" font-weight="700" fill="#fff">Supertech Steel Fabrication</text>
+  <text x="380" y="224" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" font-style="italic" font-weight="700" letter-spacing=".3" fill="#f0c3c1">Fueling industries with strength, spark, and steel · Built to last, welded to win</text>
+</svg>
