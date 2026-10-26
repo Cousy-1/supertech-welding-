@@ -1,125 +1,198 @@
-/* Update these two settings with the business's real contact details. */
-const BUSINESS_CONTACT = {
-  email: "destiny01694@gmail.com",
-  whatsapp: "254722177221",
-};
+const BUSINESS = Object.freeze({
+  name: "Supertech Engineering Works",
+  whatsapp: "254717722177",
+  phone: "+254717722177",
+  phoneDisplay: "+2547 17722177",
+  location: "Kamulu, opposite Kanjo",
+});
+
+// Add or edit customer feedback here. A review appears only when its
+// quote is filled in and approved is set to true.
+const TESTIMONIALS = [
+  { name: "Mr. Onyango", project: "Gazebo Design & Construction", quote: "The gazebo you built for us is excellent! I really love the design. The finishing and overall look are impressive, and I’m happy with the work you’ve done.", approved: true },
+  { name: "Ms. Lillian", project: "Roofing Works", quote: "Supertech Engineering Works did a fantastic job on our roofing. The results were great, and their professionalism throughout the work really stood out. I would gladly recommend their services.", approved: true },
+  { name: "Mr. Mwangi", project: "Workshop & Workmanship", quote: "Commendable work! The team demonstrated a strong work ethic and delivered a job worth appreciating. Their dedication and commitment to quality are impressive.", approved: true },
+];
+
+const testimonialGrid = document.querySelector("#testimonial-grid");
+const testimonialEmpty = document.querySelector("#testimonial-empty");
+const approvedTestimonials = TESTIMONIALS.filter((item) => item.approved && item.quote.trim());
+approvedTestimonials.forEach((item) => {
+  const card = document.createElement("article");
+  card.className = "testimonial-card";
+  const quote = document.createElement("blockquote");
+  quote.textContent = item.quote;
+  const byline = document.createElement("div");
+  byline.className = "testimonial-byline";
+  const name = document.createElement("strong");
+  name.textContent = item.name;
+  const project = document.createElement("span");
+  project.textContent = item.project;
+  byline.append(name, project);
+  card.append(quote, byline);
+  testimonialGrid.append(card);
+});
+if (approvedTestimonials.length) testimonialEmpty.hidden = true;
 
 const menuButton = document.querySelector(".menu-toggle");
-const navigation = document.querySelector(".primary-nav");
-
+const navigation = document.querySelector("#primary-nav");
+function closeMenu() {
+  menuButton.setAttribute("aria-expanded", "false");
+  menuButton.setAttribute("aria-label", "Open navigation");
+  navigation.classList.remove("is-open");
+}
 menuButton.addEventListener("click", () => {
-  const isOpen = menuButton.getAttribute("aria-expanded") === "true";
-  menuButton.setAttribute("aria-expanded", String(!isOpen));
-  menuButton.setAttribute("aria-label", isOpen ? "Open navigation" : "Close navigation");
-  navigation.classList.toggle("open", !isOpen);
+  const open = menuButton.getAttribute("aria-expanded") === "true";
+  menuButton.setAttribute("aria-expanded", String(!open));
+  menuButton.setAttribute("aria-label", open ? "Open navigation" : "Close navigation");
+  navigation.classList.toggle("is-open", !open);
 });
-
 navigation.addEventListener("click", (event) => {
-  if (event.target.closest("a")) {
-    menuButton.setAttribute("aria-expanded", "false");
-    menuButton.setAttribute("aria-label", "Open navigation");
-    navigation.classList.remove("open");
-  }
+  if (event.target.closest("a")) closeMenu();
+});
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") closeMenu();
+});
+window.addEventListener("resize", () => {
+  if (window.innerWidth > 760) closeMenu();
 });
 
-const whatsappMessage = "Hello Supertech Steel Fabrication, I would like to enquire about a project.";
+function whatsappUrl(message) {
+  return "https://wa.me/" + BUSINESS.whatsapp + "?text=" + encodeURIComponent(message);
+}
 document.querySelectorAll("[data-wa]").forEach((link) => {
-  const phone = BUSINESS_CONTACT.whatsapp.replace(/\D/g, "");
-  link.href = phone
-    ? `https://wa.me/${phone}?text=${encodeURIComponent(whatsappMessage)}`
-    : `https://wa.me/?text=${encodeURIComponent(whatsappMessage)}`;
+  const message = link.dataset.message || "Hello " + BUSINESS.name + ", I would like to discuss a project.";
+  link.href = whatsappUrl(message);
   link.target = "_blank";
   link.rel = "noopener noreferrer";
 });
+document.querySelectorAll("[data-service]").forEach((link) => {
+  link.href = whatsappUrl("Hello " + BUSINESS.name + ", I would like to discuss: " + link.dataset.service + ".");
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+});
+document.querySelectorAll('[data-contact="phone"]').forEach((link) => {
+  link.href = "tel:" + BUSINESS.phone;
+  link.textContent = BUSINESS.phoneDisplay;
+});
+document.querySelectorAll('[data-contact="location"]').forEach((link) => {
+  link.href = "https://maps.google.com/?q=" + encodeURIComponent(BUSINESS.location);
+  if (link.querySelector("span")) link.firstChild.textContent = BUSINESS.location + " ";
+  else link.textContent = BUSINESS.location + " ↗";
+});
+document.querySelector("#year").textContent = String(new Date().getFullYear());
 
-// Service cards take visitors straight to the quote form with their service selected.
-const serviceSelect = document.querySelector("#project-type");
-document.querySelectorAll(".service-card > a").forEach((link) => {
-  link.addEventListener("click", () => {
-    const title = link.closest(".service-card").querySelector("h3").textContent.trim();
-    const option = [...serviceSelect.options].find((item) => item.textContent.trim() === title);
-    if (option) serviceSelect.value = option.value;
-  });
+const photoLoop = document.querySelector("#project-photo-loop");
+const photoLoopToggle = document.querySelector("#photo-loop-toggle");
+photoLoopToggle.addEventListener("click", () => {
+  const paused = photoLoop.classList.toggle("is-paused");
+  photoLoopToggle.setAttribute("aria-label", paused ? "Resume image movement" : "Pause image movement");
+  photoLoopToggle.innerHTML = paused
+    ? 'Resume movement <span aria-hidden="true">▶</span>'
+    : 'Pause movement <span aria-hidden="true">Ⅱ</span>';
 });
 
-// Reveal content as it enters view for a little more movement while scrolling.
-document.documentElement.classList.add("js-enabled");
-const revealObserver = new IntersectionObserver((entries, observer) => {
-  entries.forEach((entry) => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add("is-visible");
-      observer.unobserve(entry.target);
+// Give every portfolio image an accessible, keyboard-friendly full-screen view.
+const lightbox = document.querySelector("#project-lightbox");
+const lightboxImage = lightbox.querySelector(".lightbox-image");
+const lightboxCategory = lightbox.querySelector(".lightbox-category");
+const lightboxTitle = lightbox.querySelector(".lightbox-title");
+const lightboxPosition = lightbox.querySelector(".lightbox-position");
+const portfolioCards = [...document.querySelectorAll(".photo-loop-group:first-child .loop-card")];
+let activePhoto = 0;
+function showPortfolioPhoto(index) {
+  activePhoto = (index + portfolioCards.length) % portfolioCards.length;
+  const card = portfolioCards[activePhoto];
+  const image = card.querySelector("img");
+  lightboxImage.src = image.src;
+  lightboxImage.alt = image.alt;
+  lightboxCategory.textContent = card.querySelector("figcaption").textContent;
+  lightboxTitle.textContent = image.alt;
+  lightboxPosition.textContent = String(activePhoto + 1).padStart(2, "0") + " / " + String(portfolioCards.length).padStart(2, "0");
+}
+function openPortfolioPhoto(index) {
+  showPortfolioPhoto(index);
+  lightbox.showModal();
+}
+portfolioCards.forEach((card, index) => {
+  card.addEventListener("click", () => openPortfolioPhoto(index));
+  card.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      openPortfolioPhoto(index);
     }
   });
-}, { threshold: 0.12 });
-document.querySelectorAll(".service-card, .gallery-item, .intro-content, .about-copy, .quote-form").forEach((item) => {
-  item.classList.add("reveal-on-scroll");
-  revealObserver.observe(item);
+});
+lightbox.querySelector(".lightbox-close").addEventListener("click", () => lightbox.close());
+lightbox.querySelector(".lightbox-previous").addEventListener("click", () => showPortfolioPhoto(activePhoto - 1));
+lightbox.querySelector(".lightbox-next").addEventListener("click", () => showPortfolioPhoto(activePhoto + 1));
+lightbox.addEventListener("click", (event) => {
+  if (event.target === lightbox) lightbox.close();
+});
+lightbox.addEventListener("keydown", (event) => {
+  if (event.key === "ArrowLeft") showPortfolioPhoto(activePhoto - 1);
+  if (event.key === "ArrowRight") showPortfolioPhoto(activePhoto + 1);
 });
 
-document.querySelector("#year").textContent = new Date().getFullYear();
-
-const form = document.querySelector("#quote-form");
-const feedback = document.querySelector("#form-feedback");
-const fields = [...form.querySelectorAll("input, select, textarea")];
-
-function setError(field, message) {
-  const error = field.parentElement.querySelector(".field-error");
-  error.textContent = message;
-  field.setAttribute("aria-invalid", message ? "true" : "false");
-}
-
-function validateField(field) {
-  const value = field.value.trim();
+const inquiryForm = document.querySelector("#inquiry-form");
+const inquiryFeedback = document.querySelector("#form-feedback");
+const requiredFields = [...inquiryForm.querySelectorAll("[required]")];
+function updateFieldError(field) {
   let message = "";
+  const value = field.value.trim();
   if (!value) message = "Please complete this field.";
-  else if (field.type === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-    message = "Enter a valid email address.";
-  } else if (field.name === "description" && value.length < 10) {
-    message = "Please add a little more detail (at least 10 characters).";
-  }
-  setError(field, message);
+  else if (field.name === "description" && value.length < 10) message = "Please add a little more detail (at least 10 characters).";
+  field.closest(".field").querySelector(".field-error").textContent = message;
+  field.setAttribute("aria-invalid", message ? "true" : "false");
   return !message;
 }
-
-fields.forEach((field) => {
-  field.addEventListener("blur", () => validateField(field));
+requiredFields.forEach((field) => {
+  field.addEventListener("blur", () => updateFieldError(field));
   field.addEventListener("input", () => {
-    if (field.getAttribute("aria-invalid") === "true") validateField(field);
+    if (field.getAttribute("aria-invalid") === "true") updateFieldError(field);
   });
-  field.addEventListener("change", () => validateField(field));
+  field.addEventListener("change", () => updateFieldError(field));
 });
-
-form.addEventListener("submit", (event) => {
+inquiryForm.addEventListener("submit", (event) => {
   event.preventDefault();
-  const allValid = fields.map(validateField).every(Boolean);
-  feedback.className = "form-feedback";
-  if (!allValid) {
-    feedback.textContent = "Please check the highlighted fields and try again.";
-    feedback.classList.add("error");
-    form.querySelector('[aria-invalid="true"]')?.focus();
+  const valid = requiredFields.map(updateFieldError).every(Boolean);
+  inquiryFeedback.className = "form-feedback";
+  if (!valid) {
+    inquiryFeedback.textContent = "Please check the highlighted fields before continuing.";
+    inquiryFeedback.classList.add("error");
+    inquiryForm.querySelector('[aria-invalid="true"]')?.focus();
     return;
   }
-
-  const values = new FormData(form);
-  const subject = `Quote request — ${values.get("type")}`;
-  const body = [
-    "Hello Supertech Steel Fabrication,",
+  const values = new FormData(inquiryForm);
+  const lines = [
+    "Hello " + BUSINESS.name + ", I would like to discuss a project.",
     "",
-    "I would like to request a quote for:",
-    `Project type: ${values.get("type")}`,
-    `Project location: ${values.get("location")}`,
-    "",
-    "Project details:",
-    values.get("description"),
-    "",
-    `Name: ${values.get("name")}`,
-    `Phone or email: ${values.get("contact")}`,
-  ].join("\n");
-
-  feedback.textContent = BUSINESS_CONTACT.email
-    ? "Opening your email app with the quote request…"
-    : "Opening your email app with the request ready. Add the business email in script.js to pre-address it.";
-  feedback.classList.add("success");
-  window.location.href = `mailto:${encodeURIComponent(BUSINESS_CONTACT.email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    "Name: " + values.get("name").trim(),
+    "Phone: " + values.get("phone").trim(),
+    "Project location: " + values.get("location").trim(),
+    "Project type: " + values.get("type"),
+    "Project details: " + values.get("description").trim(),
+  ];
+  const budget = values.get("budget").trim();
+  const contact = values.get("contact");
+  if (budget) lines.push("Budget range (KSH): " + budget);
+  if (contact) lines.push("Preferred contact: " + contact);
+  inquiryFeedback.textContent = "Your message is ready. Review it in WhatsApp and send when you’re happy with the details.";
+  inquiryFeedback.classList.add("success");
+  window.open(whatsappUrl(lines.join("\n")), "_blank", "noopener,noreferrer");
 });
+
+if ("IntersectionObserver" in window) {
+  const revealObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("is-visible");
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll(".service-card,.intro-copy,.why-lead,.inquiry-form").forEach((item) => {
+    item.classList.add("reveal");
+    revealObserver.observe(item);
+  });
+}
